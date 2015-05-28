@@ -44,30 +44,18 @@ $(function () {
      */
     $("#lotteryBtn").click(function () {
         fRotateDuringReq(); // 请求期间的旋转
-        var probability = 1; // 模拟请求返回的中奖概率
-        var data = [];
-        if (probability <= 0) {
-            // 如果没有中奖概率，抽奖盒子中只放入未中奖（或阳光普照奖）的种子值
-            data.push(0);
-        } else {
-            // 如果有中奖概率，放入相应概率的中奖类型与不中奖的种子值
-            for (var i = 1; i < awards.length; i++) {
-                data.push(i);
-            }
-            var awardCount = awards.length - 1; // 减掉第一个阳光普照奖
-            var total = Math.ceil(awardCount / parseFloat(probability));
-            for (var i = 0; i < total - awardCount; i++) data.push(0);
-        }
-        console.log("Lottery seeds: " + data);
+        var awardIds = ['0', '1', '2', '3', '4', '5', '6', '7', '8'];
+        // 随机抽取一个奖品，模拟服务端计算出的用户抽奖结果
+        var awardKey = awardIds[Math.floor(Math.random()*(awardIds.length))];
+        var award = awards[awardKey];
+        console.log("Server return award: " + award.name);
 
-        var seedIndex = data[Math.floor(Math.random() * data.length)];   // 随机抽取种子
-
-        var angle = awards[seedIndex].angle;
+        var angle = award.angle;
         if (typeof angle != "number") {
             // 角度是数组，说明转盘上有多个该奖品，随机取一个
-            angle = angle[Math.floor(Math.random() * angle.length)];
+            angle = angle[Math.floor(Math.random() * (angle.length))];
         }
-        fStartLottery(angle, "恭喜您抽中" + awards[seedIndex].name);
+        fStartLottery(angle, "恭喜您抽中" + award.name);
     });
 
 })
